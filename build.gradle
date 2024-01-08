@@ -32,6 +32,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'	// 스웨거
+	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4' //open ai
+	implementation 'com.fasterxml.jackson.core:jackson-databind'//이미지
+	// aws
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	implementation 'org.json:json:20231013'
 }
 
 tasks.named('test') {
