@@ -32,6 +32,7 @@ public class ImageProcessingService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String fastApiUrl_process = "http://localhost:8000/process_image/";
     private final String fastApiUrl_generate = "http://localhost:8000/generate_image/";
+    private final String fastApiUrl_translate = "http://localhost:8000/translate_to_korean/";
     /**
      * 이미지 설명을 반환하는 메서드이다.
      *
@@ -77,10 +78,28 @@ public class ImageProcessingService {
         }
     }
 
+    public String translateToKorean(String text) {
+        try {
+            TranslationRequest request = new TranslationRequest();
+            request.setText(text);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(fastApiUrl_translate, request, String.class);
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to translate text");
+        }
+    }
+
     @Setter
     static class ImagePromptRequest {
         @JsonProperty("prompt")
         private String prompt;
+    }
+
+    @Setter
+    static class TranslationRequest {
+        @JsonProperty("text")
+        private String text;
     }
 }
 

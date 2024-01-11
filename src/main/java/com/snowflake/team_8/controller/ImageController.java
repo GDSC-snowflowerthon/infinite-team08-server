@@ -48,4 +48,14 @@ public class ImageController {
             return ResponseEntity.internalServerError().body("Failed to generate image");
         }
     }
+
+    @GetMapping("/translate")
+    public ResponseEntity<String> translateToKorean(@RequestParam String prompt) {
+        try {
+            String response = imageProcessingService.translateToKorean(prompt);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed to translate");
+        }
+    }
 }
