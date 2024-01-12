@@ -1,25 +1,22 @@
 package com.snowflake.team_8.controller;
 
-import com.snowflake.team_8.domain.CommentRequest;
-import com.snowflake.team_8.domain.ImageGenerationResponse;
+import com.snowflake.team_8.domain.Image;
+import com.snowflake.team_8.domain.SavingImageRequest;
+import com.snowflake.team_8.repository.ImageRepository;
 import com.snowflake.team_8.service.ImageProcessingService;
 import com.snowflake.team_8.service.PresignedUrlService;
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
 
     private final PresignedUrlService presignedUrlService;
-
+    private final ImageRepository imageRepository;
     private final ImageProcessingService imageProcessingService;
 
 
@@ -57,5 +54,16 @@ public class ImageController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Failed to translate");
         }
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<Long> saveImage(@RequestBody SavingImageRequest imageRequest){
+        Long imageId = imageProcessingService.saveImage(imageRequest);
+        return ResponseEntity.ok(imageId);
+    }
+
+    @GetMapping("/all")
+    public List<Image> getAllImages() {
+        return imageRepository.findAll();
     }
 }

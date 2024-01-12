@@ -1,21 +1,18 @@
 package com.snowflake.team_8.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.snowflake.team_8.domain.CommentRequest;
-import com.snowflake.team_8.domain.ImageGenerationRequest;
-import com.snowflake.team_8.domain.ImageGenerationResponse;
+import com.snowflake.team_8.domain.*;
+import com.snowflake.team_8.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.json.JSONObject;
 
+import java.util.List;
 
 
 @Service
@@ -29,6 +26,8 @@ public class ImageProcessingService {
     private String apiKey;
 
     private final PresignedUrlService presignedUrlService;
+    private final ImageRepository imageRepository;
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final String fastApiUrl_process = "http://localhost:8000/process_image/";
     private final String fastApiUrl_generate = "http://localhost:8000/generate_image/";
@@ -100,6 +99,18 @@ public class ImageProcessingService {
     static class TranslationRequest {
         @JsonProperty("text")
         private String text;
+    }
+
+    public Long saveImage(SavingImageRequest image){
+        Image newImage = new Image();
+        newImage.setImageDescription(image.getImageDescription());
+        newImage.setImageUrl(image.getImageUrl());
+        imageRepository.save(newImage);
+        return newImage.getImageId();
+    }
+
+    public List<Image> getAllImages() {
+        return imageRepository.findAll();
     }
 }
 
